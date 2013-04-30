@@ -1,0 +1,132 @@
+		
+				# Lógica del Juego de Gato - Ruby
+				# Jorge Chavarría Rodríguez
+
+# Constantes del Juego de Gato
+JUGADOR_X = 1
+JUGADOR_0 = 2
+CASILLA_VACIA = 0
+CASILLA_CON_VALOR_X = 3
+CASILLA_CON_VALOR_Y = 5
+CONSTANTE_GANADOR_JUGADOR_1 = 9
+CONSTANTE_GANADOR_JUGADOR_2 = 15
+CANTIDAD_MAXIMA_DE_FICHAS_EN_JUEGO = 9
+
+
+class JuegoDeGato
+
+	# Contructor, crea una matriz de 3x3 de ceros
+	def initialize()	
+            private @_Tablero = [[0,0,0],[0,0,0],[0,0,0]] 
+	    private @_JugadorActual = JUGADOR_X            
+	end
+
+	
+	def get_JugadorActual()
+	    return @_JugadorActual
+	end
+
+
+	def get_Tablero()
+	    return @_Tablero
+	end
+
+	
+	def set_JugadorActual(nuevoActual)
+	    @_JugadorActual = nuevoActual
+	end
+	
+
+	# Colocar una ficha el tablero
+        def ColocarFichaEnElTablero(fila, columna) 
+	    if @_Tablero[fila][columna] == CASILLA_VACIA and @_JugadorActual == JUGADOR_X
+	        @_Tablero[fila][columna] = CASILLA_CON_VALOR_X
+		@_JugadorActual = JUGADOR_0 
+	    
+	    elsif @_Tablero[fila][columna] == CASILLA_VACIA and @_JugadorActual == JUGADOR_0
+                @_Tablero[fila][columna] = CASILLA_CON_VALOR_0
+                @_JugadorActual = JUGADOR_X
+ 	    end
+	end 
+
+
+	# Valida si alguien gana
+	def ValidarCualquierPosibilidadDeGane()
+	     if ValidarGanadorEnFilas() == true || ValidarGanadorEnColumnas() == true ||
+		ValidarGanadorEnDiagonal1() == true || ValidarGanadorEnDiagonal2() == true         
+		return true
+	     end 
+	end
+
+
+	# Validar si alguien gana en una filas
+	def ValidarGanadorEnFilas()
+	    valorTotalFilaActual = 0	    
+	    for filaActual in (0..2)
+	        valorTotalFilaActual = @_Tablero[filaActual][0] + @_Tablero[filaActual][1] + @_Tablero[filaActual][2] 
+		if ValidarGanadorEnLinea(valorTotalFilaActual)
+                    return true 
+		end 
+	    end
+	end
+
+
+	# Validar Si alguien gana en una columna
+	def ValidarGanadorEnColumnas()
+	    valorTotalColumnaActual = 0
+   	    for columnaActual in (0..2)
+		valorTotalColumnaActual = @_Tablero[0][columnaActual] + @_Tablero[1][columnaActual] + @_Tablero[2][columnaActual]
+		if ValidarGanadorEnLinea(valorTotalColumnaActual)
+		    return true
+		end
+	    end
+	end
+
+
+	# Validar si alguien gana en la diagonal 1
+	def ValidarGanadorEnDiagonal1()
+	    valorTotalDiagonal1 = @_Tablero[0][0] + @_Tablero[1][1] + @_Tablero[2][2]
+	    return ValidarGanadorEnLinea(valorTotalDiagonal1)
+	end
+
+	
+	# Validar si alguien gana en la diagonal 2
+	def ValidarGanadorEnDiagonal2()
+	    valorTotalDiagonal2 = @_Tablero[0][2] + @_Tablero[1][1] + @_Tablero[2][0]
+	    return ValidarGanadorEnLinea(valorTotalDiagonal2)
+	end
+
+	
+	# Validad si un jugador ha puesto tres fichas seguidas en una linea 
+	def ValidarGanadorEnLinea(valorTotalLinea)
+	    if valorTotalLinea == CONSTANTE_GANADOR_JUGADOR_1 || valorTotalLinea == CONSTANTE_GANADOR_JUGADOR_2
+		return true
+	    end
+	end
+
+
+	# Validar el empate del juego
+	def ValidarEmpate()
+	    totalDeFichasEnJuego = 0
+	    for filaActual in (0..2)
+		for columnaActual in (0..2)
+		    if @_Tablero[filaActual][columnaActual] != 0
+		        totalDeFichasEnJuego += 1
+		    end
+		end
+	    end
+	    if totalDeFichasEnJuego == CANTIDAD_MAXIMA_DE_FICHAS_EN_JUEGO
+		return true
+	    end
+	end
+
+
+	# Pone el tablero como al inicio del juego, todos los valores en 0
+	def VaciarTablero()
+	    for filaActual in (0..2)
+		for columnaActual in (0..2)
+		    @_Tablero[filaActual][columnaActual] = 0
+		end
+	    end
+	end
+end
